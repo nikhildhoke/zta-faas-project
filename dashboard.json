@@ -1,0 +1,66 @@
+{
+  "widgets": [
+    { "type":"metric", "x":0, "y":0,  "width":12, "height":6,
+      "properties":{"title":"Latency — Baseline vs ZTA (Size 50)","region":"${REGION}","stat":"Average","period":60,"view":"timeSeries","stacked":false,"setPeriodToTimeRange":true,
+        "metrics":[
+          ["${NS}","LatencyMs","Batch","50","Mode","Baseline",{"label":"Baseline avg (ms)"}],
+          [".","LatencyMs","Batch","50","Mode","ZTA",{"label":"ZTA avg (ms)"}]
+        ],
+        "yAxis":{"left":{"label":"ms","showUnits":true}}
+      }
+    },
+    { "type":"metric", "x":12,"y":0,  "width":12, "height":6,
+      "properties":{"title":"Security lift (Size 50)","region":"${REGION}","stat":"Sum","period":60,"view":"timeSeries","stacked":false,"setPeriodToTimeRange":true,
+        "metrics":[
+          ["${NS}","ZTAAllowed","Batch","50","Mode","ZTA",{"label":"ZTA allowed (200)"}],
+          [".","LiftDenied","Batch","50","Mode","ZTA",{"label":"Lift: baseline-allowed but ZTA denied"}],
+          [".","Deny401NoToken","Batch","50","Mode","ZTA",{"label":"401 (no token)"}],
+          [".","Deny401WrongType","Batch","50","Mode","ZTA",{"label":"401 (wrong type)"}]
+        ],
+        "yAxis":{"left":{"label":"count"}}
+      }
+    },
+
+    { "type":"metric", "x":0, "y":6,  "width":12, "height":6,
+      "properties":{"title":"Latency — Baseline vs ZTA (Size 100)","region":"${REGION}","stat":"Average","period":60,"view":"timeSeries","stacked":false,"setPeriodToTimeRange":true,
+        "metrics":[
+          ["${NS}","LatencyMs","Batch","100","Mode","Baseline",{"label":"Baseline avg (ms)"}],
+          [".","LatencyMs","Batch","100","Mode","ZTA",{"label":"ZTA avg (ms)"}]
+        ],
+        "yAxis":{"left":{"label":"ms","showUnits":true}}
+      }
+    },
+    { "type":"metric", "x":12,"y":6, "width":12, "height":6,
+      "properties":{"title":"Security lift (Size 100)","region":"${REGION}","stat":"Sum","period":60,"view":"timeSeries","stacked":false,"setPeriodToTimeRange":true,
+        "metrics":[
+          ["${NS}","ZTAAllowed","Batch","100","Mode","ZTA",{"label":"ZTA allowed (200)"}],
+          [".","LiftDenied","Batch","100","Mode","ZTA",{"label":"Lift: baseline-allowed but ZTA denied"}],
+          [".","Deny401NoToken","Batch","100","Mode","ZTA",{"label":"401 (no token)"}],
+          [".","Deny401WrongType","Batch","100","Mode","ZTA",{"label":"401 (wrong type)"}]
+        ],
+        "yAxis":{"left":{"label":"count"}}
+      }
+    },
+
+    { "type":"metric", "x":0, "y":12, "width":12, "height":6,
+      "properties":{"title":"Latency — Baseline vs ZTA (Size 500)","region":"${REGION}","stat":"Average","period":60,"view":"timeSeries","stacked":false,"setPeriodToTimeRange":true,
+        "metrics":[
+          ["${NS}","LatencyMs","Batch","500","Mode","Baseline",{"label":"Baseline avg (ms)"}],
+          [".","LatencyMs","Batch","500","Mode","ZTA",{"label":"ZTA avg (ms)"}]
+        ],
+        "yAxis":{"left":{"label":"ms","showUnits":true}}
+      }
+    },
+    { "type":"metric", "x":12,"y":12,"width":12,"height":6,
+      "properties":{"title":"Security lift (Size 500)","region":"${REGION}","stat":"Sum","period":60,"view":"timeSeries","stacked":false,"setPeriodToTimeRange":true,
+        "metrics":[
+          ["${NS}","ZTAAllowed","Batch","500","Mode","ZTA",{"label":"ZTA allowed (200)"}],
+          [".","LiftDenied","Batch","500","Mode","ZTA",{"label":"Lift: baseline-allowed but ZTA denied"}],
+          [".","Deny401NoToken","Batch","500","Mode","ZTA",{"label":"401 (no token)"}],
+          [".","Deny401WrongType","Batch","500","Mode","ZTA",{"label":"401 (wrong type)"}]
+        ],
+        "yAxis":{"left":{"label":"count"}}
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "method": "GET",
+  "path": "/echo",
+  "client": "1eigb99bdtp6n8dk5a8el3ov4f",
+  "claims": {
+    "token_use": "access",
+    "client_id": "1eigb99bdtp6n8dk5a8el3ov4f",
+    "scope": "openid email"
+  }
+}

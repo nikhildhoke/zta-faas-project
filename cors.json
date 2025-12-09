@@ -1,0 +1,4 @@
+{
+  "AllowOrigins": ["*"],
+  "AllowMethods": ["GET","POST","OPTIONS"]
+}

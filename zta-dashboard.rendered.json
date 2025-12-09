@@ -1,0 +1,160 @@
+{
+  "widgets": [
+    {
+      "type": "metric",
+      "x": 0, "y": 0, "width": 12, "height": 6,
+      "properties": {
+        "region": "eu-west-1",
+        "title": "Latency Avg (ms) — Baseline vs ZTA — 50/100/500",
+        "view": "timeSeries",
+        "stacked": false,
+        "period": 60,
+        "yAxis": { "left": { "label": "ms" } },
+        "metrics": [
+          ["ZTA/FaaSBench","LatencyAvgMs","Mode","baseline","BatchSize","50",{"stat":"Average","label":"Baseline 50"}],
+          ["ZTA/FaaSBench","LatencyAvgMs","Mode","zta","BatchSize","50",{"stat":"Average","label":"ZTA 50"}],
+          ["ZTA/FaaSBench","LatencyAvgMs","Mode","baseline","BatchSize","100",{"stat":"Average","label":"Baseline 100"}],
+          ["ZTA/FaaSBench","LatencyAvgMs","Mode","zta","BatchSize","100",{"stat":"Average","label":"ZTA 100"}],
+          ["ZTA/FaaSBench","LatencyAvgMs","Mode","baseline","BatchSize","500",{"stat":"Average","label":"Baseline 500"}],
+          ["ZTA/FaaSBench","LatencyAvgMs","Mode","zta","BatchSize","500",{"stat":"Average","label":"ZTA 500"}]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 0, "width": 12, "height": 6,
+      "properties": {
+        "region": "eu-west-1",
+        "title": "Latency p95 (ms) — Baseline vs ZTA — 50/100/500",
+        "view": "timeSeries",
+        "stacked": false,
+        "period": 60,
+        "yAxis": { "left": { "label": "ms" } },
+        "metrics": [
+          ["ZTA/FaaSBench","LatencyP95Ms","Mode","baseline","BatchSize","50",{"stat":"Average","label":"Baseline 50"}],
+          ["ZTA/FaaSBench","LatencyP95Ms","Mode","zta","BatchSize","50",{"stat":"Average","label":"ZTA 50"}],
+          ["ZTA/FaaSBench","LatencyP95Ms","Mode","baseline","BatchSize","100",{"stat":"Average","label":"Baseline 100"}],
+          ["ZTA/FaaSBench","LatencyP95Ms","Mode","zta","BatchSize","100",{"stat":"Average","label":"ZTA 100"}],
+          ["ZTA/FaaSBench","LatencyP95Ms","Mode","baseline","BatchSize","500",{"stat":"Average","label":"Baseline 500"}],
+          ["ZTA/FaaSBench","LatencyP95Ms","Mode","zta","BatchSize","500",{"stat":"Average","label":"ZTA 500"}]
+        ]
+      }
+    },
+
+    {
+      "type": "metric",
+      "x": 0, "y": 6, "width": 12, "height": 6,
+      "properties": {
+        "region": "eu-west-1",
+        "title": "ZTA policy decisions — Allow vs Deny (server-side)",
+        "view": "timeSeries",
+        "stacked": true,
+        "period": 60,
+        "stat": "Sum",
+        "metrics": [
+          ["ZTA/FaaS","DecisionAllow","Mode","zta",{"label":"Allow (ZTA)"}],
+          ["ZTA/FaaS","DecisionDeny","Mode","zta",{"label":"Deny (ZTA)"}]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 6, "width": 12, "height": 6,
+      "properties": {
+        "region": "eu-west-1",
+        "title": "ZTA auth/policy failure breakdown (server-side)",
+        "view": "timeSeries",
+        "stacked": true,
+        "period": 60,
+        "stat": "Sum",
+        "metrics": [
+          ["ZTA/FaaS","AuthMissing","Mode","zta",{"label":"401 Missing token"}],
+          ["ZTA/FaaS","AuthWrongType","Mode","zta",{"label":"401 Wrong token type"}],
+          ["ZTA/FaaS","ClientMismatch","Mode","zta",{"label":"401 Client mismatch"}],
+          ["ZTA/FaaS","ScopeMissing","Mode","zta",{"label":"403 Scope missing"}],
+          ["ZTA/FaaS","RouteBlocked","Mode","zta",{"label":"403 Route blocked"}]
+        ]
+      }
+    },
+
+    {
+      "type": "metric",
+      "x": 0, "y": 12, "width": 8, "height": 6,
+      "properties": {
+        "region": "eu-west-1",
+        "title": "ZTA blocked % of would-be baseline success — 50",
+        "view": "singleValue",
+        "period": 60,
+        "metrics": [
+          ["ZTA/FaaSBench","Count2xx","Mode","baseline","BatchSize","50",{"stat":"Sum","id":"b50"}],
+          ["ZTA/FaaSBench","Count403","Mode","zta","BatchSize","50",{"stat":"Sum","id":"z50"}],
+          [{ "expression": "100*z50/(b50+z50)", "label": "Blocked % (50)", "id":"e50"}]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8, "y": 12, "width": 8, "height": 6,
+      "properties": {
+        "region": "eu-west-1",
+        "title": "ZTA blocked % of would-be baseline success — 100",
+        "view": "singleValue",
+        "period": 60,
+        "metrics": [
+          ["ZTA/FaaSBench","Count2xx","Mode","baseline","BatchSize","100",{"stat":"Sum","id":"b100"}],
+          ["ZTA/FaaSBench","Count403","Mode","zta","BatchSize","100",{"stat":"Sum","id":"z100"}],
+          [{ "expression": "100*z100/(b100+z100)", "label": "Blocked % (100)", "id":"e100"}]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16, "y": 12, "width": 8, "height": 6,
+      "properties": {
+        "region": "eu-west-1",
+        "title": "ZTA blocked % of would-be baseline success — 500",
+        "view": "singleValue",
+        "period": 60,
+        "metrics": [
+          ["ZTA/FaaSBench","Count2xx","Mode","baseline","BatchSize","500",{"stat":"Sum","id":"b500"}],
+          ["ZTA/FaaSBench","Count403","Mode","zta","BatchSize","500",{"stat":"Sum","id":"z500"}],
+          [{ "expression": "100*z500/(b500+z500)", "label": "Blocked % (500)", "id":"e500"}]
+        ]
+      }
+    },
+
+    {
+      "type": "metric",
+      "x": 0, "y": 18, "width": 12, "height": 5,
+      "properties": {
+        "region": "eu-west-1",
+        "title": "OPA eval p95 (ms) — server-side policy cost",
+        "view": "singleValue",
+        "period": 60,
+        "metrics": [
+          ["ZTA/FaaS","OPAEvalMs","Mode","zta",{"stat":"p95","label":"OPA p95 ms"}]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 18, "width": 12, "height": 5,
+      "properties": {
+        "region": "eu-west-1",
+        "title": "Edge blocked (403, ZTA) vs Baseline 2xx — 50/100/500",
+        "view": "timeSeries",
+        "stacked": false,
+        "period": 60,
+        "stat": "Sum",
+        "metrics": [
+          ["ZTA/FaaSBench","Count403","Mode","zta","BatchSize","50",{"label":"403 ZTA (50)"}],
+          ["ZTA/FaaSBench","Count2xx","Mode","baseline","BatchSize","50",{"label":"2xx Baseline (50)"}],
+          ["ZTA/FaaSBench","Count403","Mode","zta","BatchSize","100",{"label":"403 ZTA (100)"}],
+          ["ZTA/FaaSBench","Count2xx","Mode","baseline","BatchSize","100",{"label":"2xx Baseline (100)"}],
+          ["ZTA/FaaSBench","Count403","Mode","zta","BatchSize","500",{"label":"403 ZTA (500)"}],
+          ["ZTA/FaaSBench","Count2xx","Mode","baseline","BatchSize","500",{"label":"2xx Baseline (500)"}]
+        ]
+      }
+    }
+  ]
+}
