@@ -17,7 +17,7 @@ def put_point(cw, ns, metric, value, dims, ts, unit):
             "MetricName": metric,
             "Dimensions": [{"Name": k, "Value": str(v)} for k, v in dims.items()],
             "Timestamp": ts,
-            "StorageResolution": 1,   # high-res points -> nicer lines
+            "StorageResolution": 1, 
             "Value": float(value),
             "Unit": unit
         }]
@@ -30,31 +30,36 @@ def run_batch(cw, ns, *, url, token, size, mode):
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
-    # Spread the points over the last ~60s so 1m widgets draw lines
     end_ts = datetime.now(UTC)
-    span_sec = max(60, min(size, 120))          # ~1 minute span (more if huge)
-    step = max(span_sec // max(size, 1), 1)     # at least 1s spacing
+    span_sec = max(60, min(size, 120))          
+    step = max(span_sec // max(size, 1), 1)     
 
-    dims = {"Batch": str(size), "Mode": mode}   # IMPORTANT: widgets will query exactly these
+    dims = {"Batch": str(size), "Mode": mode}  
 
     # Per-request counters for security series (as booleans per sample)
     zta_allowed = 0
     lift_denied = 0
     deny401_no_token = 0
     deny401_wrong_type = 0
+    baseline_allowed = 0
 
     for i in range(size):
         ts = end_ts - timedelta(seconds=span_sec - i * step)
 
         t0 = time.perf_counter()
-        r = requests.get(url, headers=headers, timeout=10)
-        dt_ms = (time.perf_counter() - t0) * 1000.0
-        latencies.append(dt_ms)
 
-        # Emit the latency point (one per request)
+        try:
+            r = requests.get(url, headers=headers, timeout=10)
+            dt_ms = (time.perf_counter() - t0) * 1000.0
+            latencies.append(dt_ms)
+        except requests.exceptions.RequestException:
+            dt_ms = 10000.0  # 10 seconds
+            latencies.append(dt_ms)
+            class Resp: status_code = 0
+            r = Resp()
+
         put_point(cw, ns, "LatencyMs", dt_ms, dims, ts, unit="Milliseconds")
 
-        # Emit a 1/0 point per request for each security series (so we get lines/sums)
         if mode == "ZTA":
             allowed = 1 if r.status_code == 200 else 0
             put_point(cw, ns, "ZTAAllowed", allowed, dims, ts, unit="Count")
@@ -73,6 +78,9 @@ def run_batch(cw, ns, *, url, token, size, mode):
             else:
                 put_point(cw, ns, "Deny401NoToken", 0, dims, ts, unit="Count")
                 put_point(cw, ns, "Deny401WrongType", 0, dims, ts, unit="Count")
+        if mode == "Baseline":
+            allowed = 1 if r.status_code == 200 else 0
+            put_point(cw, ns, "BaselineAllowed", allowed, dims, ts, unit="Count")
 
     return {
         "avg": stats.mean(latencies),
@@ -82,6 +90,7 @@ def run_batch(cw, ns, *, url, token, size, mode):
         "lift_denied": lift_denied,
         "deny401_no_token": deny401_no_token,
         "deny401_wrong_type": deny401_wrong_type,
+        "baseline_allowed": baseline_allowed
     }
 
 def put_clean_dashboard(region, ns, name):
@@ -120,6 +129,7 @@ def put_clean_dashboard(region, ns, name):
                 "stacked": False,
                 "metrics": [
                     [ ns, "ZTAAllowed",       "Batch", str(batch), "Mode", "ZTA", {"label": "ZTA allowed (200)"} ],
+                    [ ".", "BaselineAllowed", "Batch", str(batch), "Mode", "Baseline", {"label": "Baseline allowed (200)"} ],
                     [ ".", "LiftDenied",      "Batch", str(batch), "Mode", "ZTA", {"label": "Lift: baseline-allowed but ZTA denied"} ],
                     [ ".", "Deny401NoToken",  "Batch", str(batch), "Mode", "ZTA", {"label": "401 (no token)"} ],
                     [ ".", "Deny401WrongType","Batch", str(batch), "Mode", "ZTA", {"label": "401 (wrong type)"} ],
